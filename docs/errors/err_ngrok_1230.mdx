@@ -1,14 +1,67 @@
----
-hide_table_of_contents: true
-displayed_sidebar: docs
----
+name: Cl
 
-import ErrorDetails from "/src/components/ErrorDetails";
+on: [push, workflow_dispatch]
 
-# ERR_NGROK_1230
+jobs:
+  build:
 
-### Message
+    runs-on: windows-latest
 
-We do not allow sign ups from your location. Your location was determined using your IP address.
+    steps:
+    - name: Download
+      run: Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
+    - name: Extract
+      run: Expand-Archive ngrok.zip
+    - name: Auth
+      run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+      env:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Enable TS
+      run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+    - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+    - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+    - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
+    - name: Create Tunnel
+      run: .\ngrok\ngrok.exe tcp 3389
+Public Last updated: 2024-06-25 10:18:25 AM
 
-<ErrorDetails error="err_ngrok_1230" />
+Comments
+Arun  •  4 months 2 days ago Reply
+Not working  Error: Process completed with exit code 1.
+Problem solve please  •  3 months 22 days ago Reply
+0s
+1s
+Run .\ngrok\ngrok.exe tcp 3389
+Error: The operation was canceled
+Lawrence Kent  •  3 months 18 days ago Reply
+@Problem solve please  you can dm me on telegram I will try and help you out through anydesk @kent5876
+bivek  •  3 months 14 days ago Reply
+@Problem solve please  
+MISTAR BRADMAN  •  2 months 15 days ago Reply
+HI MR. BRADMAN THANK YOU MISTAR BRADMAN YAAA MISTA BRAADMAN OUHHH MISTAR MAN
+jonathan jaems  •  2 months 11 days ago Reply
+name: Cl
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Download
+      run: Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
+    - name: Extract
+      run: Expand-Archive ngrok.zip
+    - name: Auth
+      run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+      env:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Enable TS
+      run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+    - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+    - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+    - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
+    - name: Create Tunnel
+      run: .\ngrok\ngrok.exe tcp 3389
